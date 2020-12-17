@@ -27,6 +27,7 @@ var decompress_funcref: FuncRef = null
 # Debugging info
 var packets_received_this_frame: int = 0
 
+var f:File = File.new()
 
 func vc_debug_print(p_str):
 	if DEBUG:
@@ -199,6 +200,8 @@ func attempt_to_feed_stream(
 					if uncompressed_audio.size() == voice_manager_const.BUFFER_FRAME_COUNT:
 						playback.push_buffer(uncompressed_audio)
 						packet_pushed = true
+						f.store_var(uncompressed_audio)
+						f.store_32(0xdeadcafe)
 		if ! packet_pushed:
 			playback.push_buffer(blank_packet)
 
@@ -227,6 +230,7 @@ func _ready() -> void:
 	uncompressed_audio.resize(voice_manager_const.BUFFER_FRAME_COUNT)
 
 	decompress_funcref = funcref(get_node(".."), "decompress_buffer")
+	f.open("user://playback.buffer" + str(OS.get_ticks_usec()), File.WRITE)
 
 
 func _init() -> void:

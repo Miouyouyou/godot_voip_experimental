@@ -72,6 +72,7 @@ func set_buffer(p_buffer : PoolByteArray) -> void:
 	audio_mutex.unlock()
 
 func _audio_packet_processed(p_buffer : PoolByteArray) -> void:
+	print("Got called from... where ?")
 	if network_layer.is_active_player():
 		if p_buffer.size() == voice_manager_const.BUFFER_FRAME_COUNT * voice_manager_const.BUFFER_BYTE_COUNT:
 			var compressed_buffer : PoolByteArray = godot_speech.compress_buffer(p_buffer)
